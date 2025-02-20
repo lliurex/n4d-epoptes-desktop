@@ -1,0 +1,14 @@
+{
+    "SETUP": {
+        "type": "python",
+        "path": "EpoptesDesktopClient.py",
+        "class": "EpoptesDesktopClient"
+    },
+    "METHODS": {
+        "get_certificate_timestamp": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        }
+    }
+}
