@@ -12,7 +12,7 @@ if [ "$1" = "remove" ] ; then
 
 
         if [ -e "$NEW_DIVERTED_FILE" ]; then
-                dpkg-divert --remove --package ${PKG} --rename --divert "$NEW_DIVERTED_LO_FILE" "$ORIGINAL_LO_FILE"
+                dpkg-divert --remove --package ${PKG} --rename --divert "$NEW_DIVERTED_FILE" "$ORIGINAL_FILE"
 
         fi
 
