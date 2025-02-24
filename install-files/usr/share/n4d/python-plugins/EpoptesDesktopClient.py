@@ -28,6 +28,11 @@ class EpoptesDesktopClient:
 	
 	def startup(self,options):
 		
+		# if there is a certificate and it is valid
+		# we should try to avoid restarting epoptes-client service
+		if os.path.exists(self.epoptes_certificate):
+			self.current_md5=self.get.certificate_md5
+		
 		self.main_loop()
 		
 	#def startup
@@ -82,8 +87,8 @@ class EpoptesDesktopClient:
 	def configure_epoptes(self):
 		
 		if self.get_epoptes_certificate():
-			self.current_md5=self.get_certificate_md5()
 			self.restart_epoptes_client()
+			self.current_md5=self.get_certificate_md5()
 			self.cert_ready_timestamp=int(time.time())
 			
 			return True
