@@ -1,0 +1,15 @@
+Source: n4d-epoptes-desktop
+Section: python
+Priority: standard
+Maintainer: Equipo LliureX <lliurex@gva.es> 
+Build-Depends: debhelper (>=10)
+Standards-Version: 4.1.2
+Homepage: http://lliurex.net
+Vcs-Browser: https://github.com/lliurex/n4d-epoptes-desktop
+
+Package: n4d-epoptes-desktop
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, epoptes-client
+Description: N4D plugin to manage epoptes certificate over Natfree networks
+  This plugin makes sure epoptes-client is ready both at system and user level.
+
