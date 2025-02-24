@@ -3,7 +3,15 @@
 case $1 in
 	configure)
 
-                n4d-modules enable-plugin /etc/n4d/conf.d/EpoptesDesktopClient.json || true		
+                n4d-modules enable-plugin /etc/n4d/conf.d/EpoptesDesktopClient.json || true
+
+		PKG="n4d-epoptes-desktop"
+		ORIGINAL_FILE="/etc/xdg/autostart/epoptes-client.desktop"
+		NEW_DIVERTED_FILE="/etc/xdg/epoptes-client.desktop.diverted"
+
+		if [ ! -e "$NEW_DIVERTED_FILE" ]; then
+			dpkg-divert --add --package ${PKG} --rename --divert "$NEW_DIVERTED_FILE" "$ORIGINAL_FILE"
+		fi
 
 	;;
 	*)
