@@ -5,6 +5,7 @@ import xmlrpc.client
 import ssl
 import subprocess
 import time
+import os
 
 class EpoptesClientManager:
 
@@ -28,6 +29,8 @@ class EpoptesClientManager:
 			self.epoptes_client_pid=p.pid
 			return True
 		
+		
+		
 		return False
 		
 	#def execute_epoptes_client
@@ -35,7 +38,7 @@ class EpoptesClientManager:
 	def stop_epoptes_client(self):
 		
 		if self.epoptes_client_pid != None:
-			os.system("kill -9 %s"%self.epoptes_client_pid)
+			ret=os.system("kill -9 %s"%self.epoptes_client_pid)
 			self.epoptes_client_pid=None
 			return True
 			
@@ -81,7 +84,7 @@ class EpoptesClientManager:
 					self.restart_epoptes_client()
 				
 				timeout=self.configured_timeout
-			
+
 			time.sleep(timeout)
 		
 	#def run_forever
