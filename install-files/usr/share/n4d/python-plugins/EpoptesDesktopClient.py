@@ -14,15 +14,15 @@ class EpoptesDesktopClient:
 	def __init__(self):
 		
 		self.epoptes_certificate="/etc/epoptes/server.crt"
-		self.epoptes_certificate="EpoptesDesktopClient.py"
 		self.current_md5=None
 		self.cert_ready_timestamp=None
 		self.server_name="server"
 			
 		self.default_timeout=15
-		self.server_retest_timeout=60*2
+		self.server_retest_timeout=60*3
 		
-		os.makedirs("/etc/epoptes/")
+		if not os.path.exists("/etc/epoptes"):
+			os.makedirs("/etc/epoptes/")
 		
 	#def init
 	
@@ -62,9 +62,9 @@ class EpoptesDesktopClient:
 					if self.check_remote_certificate():
 						timeout=self.server_retest_timeout
 					else:
-						if configure_epoptes():
+						if self.configure_epoptes():
 							timeout=self.server_retest_timeout
-							
+
 			time.sleep(timeout)	
 		
 	#def main_loop
@@ -73,6 +73,7 @@ class EpoptesDesktopClient:
 		
 		try:
 			socket.gethostbyname(self.server_name)
+			return True
 		except:
 			return False
 		
@@ -94,9 +95,11 @@ class EpoptesDesktopClient:
 	def check_remote_certificate(self):
 		
 		# stolen from epoptes-client
-		ret=os.system("openssl s_client -connect %s:789 </dev/null | sed '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/!d' > %s.tmp"%(self.server_name,self.epoptes_certificate))
+		ret=os.system("openssl s_client -connect %s:789 </dev/null 2>/dev/null | sed '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/!d' > %s.tmp"%(self.server_name,self.epoptes_certificate))
 		if ret==0:
 			cert=self.get_certificate_md5("%s.tmp"%self.epoptes_certificate)
+			if os.path.exists("%s.tmp"%self.epoptes_certificate):
+				os.remove("%s.tmp"%self.epoptes_certificate)
 			if cert == self.current_md5:
 				return True			
 				
@@ -137,7 +140,7 @@ class EpoptesDesktopClient:
 		try:
 			with open(cert_path) as file, mmap(file.fileno(), 0, access=ACCESS_READ) as file:
 				return md5(file).hexdigest()
-		except:
+		except Exception as e:
 			return None
 			
 	#def get_certificate_md5
