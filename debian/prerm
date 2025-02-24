@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+
+if [ "$1" = "remove" ] ; then
+
+
+        PKG="n4d-epoptes-desktop"
+        ORIGINAL_FILE="/etc/xdg/autostart/epoptes-client.desktop"
+        NEW_DIVERTED_FILE="/etc/xdg/epoptes-client.desktop.diverted"
+
+
+        if [ -e "$NEW_DIVERTED_FILE" ]; then
+                dpkg-divert --remove --package ${PKG} --rename --divert "$NEW_DIVERTED_LO_FILE" "$ORIGINAL_LO_FILE"
+
+        fi
+
+fi
+#DEBHELPER#
+
+exit 0
