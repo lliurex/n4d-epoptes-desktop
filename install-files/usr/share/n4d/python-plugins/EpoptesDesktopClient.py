@@ -30,8 +30,11 @@ class EpoptesDesktopClient:
 		
 		# if there is a certificate and it is valid
 		# we should try to avoid restarting epoptes-client service
+		# main loop will check if server's cert is the same as 
+		# client current one
 		if os.path.exists(self.epoptes_certificate):
-			self.current_md5=self.get.certificate_md5
+			self.current_md5=self.get_certificate_md5()
+			self.cert_ready_timestamp=int(time.time())
 		
 		self.main_loop()
 		
