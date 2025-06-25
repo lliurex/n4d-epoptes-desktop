@@ -76,12 +76,15 @@ class EpoptesClientManager:
 		while True:
 
 			timeout=self.unconfigured_timeout
-			
 			timestamp=self.get_current_certificate_timestamp()
+			
+			self.start_epoptes_client()
+			
 			if timestamp!=None:
 				if timestamp!=self.current_certificate_timestamp:
 					self.current_certificate_timestamp=timestamp
-					self.restart_epoptes_client()
+					# lets leave epoptes-client to its own for now
+					#self.restart_epoptes_client()
 				
 				timeout=self.configured_timeout
 
