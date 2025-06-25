@@ -1,3 +1,10 @@
+n4d-epoptes-desktop (0.2) jammy; urgency=medium
+
+  * epoptes-client is left unmanaged for now. We start it, and lets see how it
+    goes. It seems to resurect itself without help when it cant connect 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 25 Jun 2025 11:43:54 +0200
+
 n4d-epoptes-desktop (0.1) jammy; urgency=medium
 
   * Initial release.
