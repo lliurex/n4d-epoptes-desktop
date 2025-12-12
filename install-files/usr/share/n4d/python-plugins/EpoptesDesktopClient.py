@@ -5,6 +5,8 @@ import time
 import socket
 import shutil
 import xmlrpc.client
+import ssl
+
 import n4d.responses
 
 
@@ -51,6 +53,7 @@ class EpoptesDesktopClient:
 	
 	def get_server_n4d_id(self):
 		
+		context=ssl._create_unverified_context()
 		n4d=xmlrpc.client.ServerProxy("https://%s:9779"%self.server_name,allow_none=True,context=context)
 		try:
 			ret=n4d.get_n4d_id()
