@@ -4,7 +4,9 @@ import threading
 import time
 import socket
 import shutil
+import xmlrpc.client
 import n4d.responses
+
 
 from hashlib import md5
 from mmap import mmap, ACCESS_READ
@@ -17,6 +19,7 @@ class EpoptesDesktopClient:
 		self.current_md5=None
 		self.cert_ready_timestamp=None
 		self.server_name="server"
+		self.master_n4d_id=None
 			
 		self.default_timeout=15
 		self.server_retest_timeout=60*3
@@ -46,6 +49,18 @@ class EpoptesDesktopClient:
 		
 	#def startup
 	
+	def get_server_n4d_id(self):
+		
+		n4d=xmlrpc.client.ServerProxy("https://%s:9779"%self.server_name,allow_none=True,context=context)
+		try:
+			ret=n4d.get_n4d_id()
+			return ret["return"]
+			
+		except:
+			return None
+		
+	#def get_server_n4d_id
+
 
 	def get_certificate_timestamp(self):
 		
@@ -72,12 +87,19 @@ class EpoptesDesktopClient:
 				if self.current_md5==None:
 					if self.configure_epoptes():
 						timeout=self.server_retest_timeout
+						self.master_n4d_id = self.get_server_n4d_id()
 				else:
 					if self.check_remote_certificate():
 						timeout=self.server_retest_timeout
+						master_n4d_id=self.get_server_n4d_id()
+						if master_n4d_id != self.master_n4d_id:
+							if self.configure_epoptes():
+								self.master_n4d_id=master_n4d_id
+								
 					else:
 						if self.configure_epoptes():
 							timeout=self.server_retest_timeout
+							self.master_n4d_id = self.get_server_n4d_id()
 
 			time.sleep(timeout)	
 		
