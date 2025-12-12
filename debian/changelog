@@ -1,4 +1,4 @@
-n4d-epoptes-desktop (0.3.2) jammy; urgency=medium
+n4d-epoptes-desktop (0.3.3) jammy; urgency=medium
 
   * Adding remote n4d_id check 
 
