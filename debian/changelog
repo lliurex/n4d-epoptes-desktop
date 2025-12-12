@@ -1,4 +1,4 @@
-n4d-epoptes-desktop (0.3) jammy; urgency=medium
+n4d-epoptes-desktop (0.3.1) jammy; urgency=medium
 
   * back to restarting epoptes-client.
   * it also restarts epoptes-client if it is a zombie process
