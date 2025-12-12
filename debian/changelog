@@ -1,3 +1,9 @@
+n4d-epoptes-desktop (0.3.2) jammy; urgency=medium
+
+  * Adding remote n4d_id check 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 12 Dec 2025 13:30:01 +0100
+
 n4d-epoptes-desktop (0.3.1) jammy; urgency=medium
 
   * back to restarting epoptes-client.
