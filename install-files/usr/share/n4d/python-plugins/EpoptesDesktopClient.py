@@ -24,6 +24,12 @@ class EpoptesDesktopClient:
 		if not os.path.exists("/etc/epoptes"):
 			os.makedirs("/etc/epoptes/")
 		
+		# unless we come up with something better
+		# best idea is to remove certificate if it exists on initialization
+		
+		if os.path.exists(self.epoptes_certificate):
+			os.remove(self.epoptes_certificate)
+		
 	#def init
 	
 	def startup(self,options):
@@ -32,9 +38,9 @@ class EpoptesDesktopClient:
 		# we should try to avoid restarting epoptes-client service
 		# main loop will check if server's cert is the same as 
 		# client current one
-		if os.path.exists(self.epoptes_certificate):
-			self.current_md5=self.get_certificate_md5()
-			self.cert_ready_timestamp=int(time.time())
+		# if os.path.exists(self.epoptes_certificate):
+		#	self.current_md5=self.get_certificate_md5()
+		#	self.cert_ready_timestamp=int(time.time())
 		
 		self.main_loop()
 		

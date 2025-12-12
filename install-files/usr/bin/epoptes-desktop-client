@@ -6,6 +6,7 @@ import ssl
 import subprocess
 import time
 import os
+import psutil
 
 class EpoptesClientManager:
 
@@ -71,6 +72,20 @@ class EpoptesClientManager:
 		
 	#def get_current_certificate_timestamp
 	
+	def check_zombie(self):
+		
+		try:
+			if self.epoptes_client_pid!=None:
+				proc=psutil.Process(self.epoptes_client_pid)
+				if proc.status() == psutil.STATUS_ZOMBIE:
+					return True
+			
+			return False
+		except:
+			return False
+			
+	#def check_zombie
+	
 	def run_forever(self):
 		
 		while True:
@@ -84,10 +99,14 @@ class EpoptesClientManager:
 				if timestamp!=self.current_certificate_timestamp:
 					self.current_certificate_timestamp=timestamp
 					# lets leave epoptes-client to its own for now
-					#self.restart_epoptes_client()
+					# [2] ... or maybe lets not
+					self.restart_epoptes_client()
 				
 				timeout=self.configured_timeout
-
+			
+			if self.check_zombie():
+				self.restart_epoptes_client()
+			
 			time.sleep(timeout)
 		
 	#def run_forever
