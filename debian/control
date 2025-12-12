@@ -9,7 +9,7 @@ Vcs-Browser: https://github.com/lliurex/n4d-epoptes-desktop
 
 Package: n4d-epoptes-desktop
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, epoptes-client
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, epoptes-client, python3-psutil
 Description: N4D plugin to manage epoptes certificate over Natfree networks
   This plugin makes sure epoptes-client is ready both at system and user level.
 
