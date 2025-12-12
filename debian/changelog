@@ -1,3 +1,11 @@
+n4d-epoptes-desktop (0.3) jammy; urgency=medium
+
+  * back to restarting epoptes-client.
+  * it also restarts epoptes-client if it is a zombie process
+  * delete epoptes certificate on n4d initialization  
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 12 Dec 2025 12:56:37 +0100
+
 n4d-epoptes-desktop (0.2) jammy; urgency=medium
 
   * epoptes-client is left unmanaged for now. We start it, and lets see how it
