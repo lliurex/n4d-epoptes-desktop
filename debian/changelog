@@ -1,3 +1,12 @@
+n4d-epoptes-desktop (0.3.4) jammy; urgency=medium
+
+  * Trying to fix multiple epoptes-client instances. It was due to root
+    epoptes-client process restarting and old user epoptes-client|socat
+    surviving. 
+  * Trying to use psutil to kill processes 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 26 Feb 2026 14:30:09 +0100
+
 n4d-epoptes-desktop (0.3.3) jammy; urgency=medium
 
   * Adding remote n4d_id check 
