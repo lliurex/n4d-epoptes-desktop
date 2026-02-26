@@ -1,3 +1,9 @@
+n4d-epoptes-desktop (0.3.5) jammy; urgency=medium
+
+  * Added debug prints 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 26 Feb 2026 18:28:45 +0100
+
 n4d-epoptes-desktop (0.3.4) jammy; urgency=medium
 
   * Trying to fix multiple epoptes-client instances. It was due to root
