@@ -8,6 +8,8 @@ import time
 import os
 import psutil
 
+DEBUG=False
+
 class EpoptesClientManager:
 
 	def __init__(self):
@@ -21,9 +23,18 @@ class EpoptesClientManager:
 		context=ssl._create_unverified_context()
 		self.n4d=xmlrpc.client.ServerProxy("https://localhost:9779",allow_none=True,context=context)
 		
+		self.dprint("Staring loop...")
+		
 		self.run_forever()
 		
 	#def init
+	
+	def dprint(self,data):
+		
+		if DEBUG:
+			print("[EpoptesDesktopClient] %s"%str(data))
+		
+	#def dprint
 	
 	def get_root_epoptes_pid(self):
 		
@@ -39,9 +50,13 @@ class EpoptesClientManager:
 	def start_epoptes_client(self):
 		
 		if self.epoptes_client_pid == None:
+			self.dprint("Starting epoptes-client...")
 			p=subprocess.Popen(["epoptes-client"])
 			self.epoptes_client_pid=p.pid
+			self.dprint("epoptes-client pid: %s"%p.pid)
 			return True
+	
+		self.dprint("epoptes-client instance already running. Skipping start_epoptes_client...")
 	
 		return False
 		
@@ -52,28 +67,34 @@ class EpoptesClientManager:
 		if self.epoptes_client_pid != None:
 			process=psutil.Process(self.epoptes_client_pid)
 			try:
+				self.dprint("Killing epoptes-client child processes...")
 				for child in process.children():
 					child.kill()
 			except Exception as e:
-				print(e)
+				self.dprint(e)
 
 			try:
+				self.dprint("Killing epoptes-client [%s]"%self.epoptes_client_pid)
 				process.kill()
 			except Exception as e:
-				print(e)
+				self.dprint(e)
 				os.system("kill -9 %s"%self.epoptes_client_pid)
 				
 			self.epoptes_client_pid=None
 			return True
-			
+		
+		# Should we make sure epoptes_client_pid is None ? 
+		self.epoptes_client_pid = None
+		self.dprint("epoptes-client pid not registered. Skipping stop_epoptes_client...")
 		return False
 		
 	#def stop_epoptes_client
 	
 	def restart_epoptes_client(self):
 		
+		self.dprint("Restarting epoptes-client...")
 		self.stop_epoptes_client()
-		self.start_epoptes_client()
+		return self.start_epoptes_client()
 		
 	#def restart_epoptes_client
 	
@@ -86,9 +107,9 @@ class EpoptesClientManager:
 			if ret["status"]==0:
 				cert_timestamp=ret["return"]
 			else:
-				print(ret)
+				self.dprint(ret)
 		except Exception as e:
-			print(e)
+			self.dprint(e)
 			
 		return cert_timestamp
 			
@@ -101,6 +122,7 @@ class EpoptesClientManager:
 			if self.epoptes_client_pid!=None:
 				proc=psutil.Process(self.epoptes_client_pid)
 				if proc.status() == psutil.STATUS_ZOMBIE:
+					self.dprint("epoptes-client seems to be in zombie status.")
 					return True
 			
 			return False
@@ -115,29 +137,50 @@ class EpoptesClientManager:
 			
 			timeout=self.unconfigured_timeout
 			timestamp=self.get_current_certificate_timestamp()
+			self.dprint("Server certificate configuration timestamp: %s"%timestamp)
 			
-			self.start_epoptes_client()
+			# This should be covered by following if
+			# self.start_epoptes_client()
 			
 			if timestamp!=None:
-				if timestamp!=self.current_certificate_timestamp:
-					self.current_certificate_timestamp=timestamp
-					# lets leave epoptes-client to its own for now
-					# [2] ... or maybe lets not
-					self.restart_epoptes_client()
 				
-				timeout=self.configured_timeout
+				restart_ok = True
+				
+				# whether its the first time or a different timestamp
+				# we need to register new timestamp and restart 
+				# user-level epoptes-client
+				if timestamp!=self.current_certificate_timestamp:
+					self.dprint("Registering new certificate timestamp")
+					self.current_certificate_timestamp=timestamp
+					restart_ok = self.restart_epoptes_client()
+
+				if restart_ok:
+					timeout=self.configured_timeout
 			
 			if self.check_zombie():
-				self.restart_epoptes_client()
+				# Something seems to be wrong. 
+				# Lets restart user-level epoptes-client
+				if self.restart_epoptes_client():
+					timeout=self.configured_timeout
+				else:
+					timeout=self.unconfigured_timeout
 			
 			root_epoptes_pid=self.get_root_epoptes_pid()
+			self.dprint("Current root epoptes-client pid: %s"%root_epoptes_pid)
+			
 			if self.root_epoptes_pid==None:
+				self.dprint("First time registering root epoptes-client.")
 				self.root_epoptes_pid=root_epoptes_pid
 			else:
 				if root_epoptes_pid != self.root_epoptes_pid:
+					self.dprint("Current root epoptes-client pid is different from registered root epoptes-client pid. %s != %s "%(root_epoptes_pid,self.root_epoptes_pid))
 					self.root_epoptes_pid=root_epoptes_pid
-					self.restart_epoptes_client()
+					if self.restart_epoptes_client():
+						timeout=self.configured_timeout
+					else:
+						timeout=self.unconfigured_timeout
 			
+			self.dprint("Sleeping %s ..."%timeout)
 			time.sleep(timeout)
 		
 	#def run_forever
@@ -145,6 +188,9 @@ class EpoptesClientManager:
 #class EpoptesClientManager
 
 if __name__=="__main__":
+	
+	if len(sys.argv)>1:
+		DEBUG=True
 	
 	ecm=EpoptesClientManager()
 	
