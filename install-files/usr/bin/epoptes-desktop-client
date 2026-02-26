@@ -13,9 +13,11 @@ class EpoptesClientManager:
 	def __init__(self):
 		
 		self.epoptes_client_pid=None
+		self.root_epoptes_pid=None
 		self.current_certificate_timestamp=None
 		self.unconfigured_timeout=15
 		self.configured_timeout=60*3
+		
 		context=ssl._create_unverified_context()
 		self.n4d=xmlrpc.client.ServerProxy("https://localhost:9779",allow_none=True,context=context)
 		
@@ -23,15 +25,24 @@ class EpoptesClientManager:
 		
 	#def init
 	
+	def get_root_epoptes_pid(self):
+		
+		try:
+			for p in psutil.process_iter():
+				if "epoptes-client" in p.name() and "root" == p.username():
+					return p.pid
+		except:
+			pass 
+			
+		return None
+	
 	def start_epoptes_client(self):
 		
 		if self.epoptes_client_pid == None:
 			p=subprocess.Popen(["epoptes-client"])
 			self.epoptes_client_pid=p.pid
 			return True
-		
-		
-		
+	
 		return False
 		
 	#def execute_epoptes_client
@@ -39,7 +50,19 @@ class EpoptesClientManager:
 	def stop_epoptes_client(self):
 		
 		if self.epoptes_client_pid != None:
-			ret=os.system("kill -9 %s"%self.epoptes_client_pid)
+			process=psutil.Process(self.epoptes_client_pid)
+			try:
+				for child in process.children():
+					child.kill()
+			except Exception as e:
+				print(e)
+
+			try:
+				process.kill()
+			except Exception as e:
+				print(e)
+				os.system("kill -9 %s"%self.epoptes_client_pid)
+				
 			self.epoptes_client_pid=None
 			return True
 			
@@ -89,7 +112,7 @@ class EpoptesClientManager:
 	def run_forever(self):
 		
 		while True:
-
+			
 			timeout=self.unconfigured_timeout
 			timestamp=self.get_current_certificate_timestamp()
 			
@@ -106,6 +129,14 @@ class EpoptesClientManager:
 			
 			if self.check_zombie():
 				self.restart_epoptes_client()
+			
+			root_epoptes_pid=self.get_root_epoptes_pid()
+			if self.root_epoptes_pid==None:
+				self.root_epoptes_pid=root_epoptes_pid
+			else:
+				if root_epoptes_pid != self.root_epoptes_pid:
+					self.root_epoptes_pid=root_epoptes_pid
+					self.restart_epoptes_client()
 			
 			time.sleep(timeout)
 		

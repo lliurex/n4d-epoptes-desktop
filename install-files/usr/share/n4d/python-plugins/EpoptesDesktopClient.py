@@ -95,10 +95,14 @@ class EpoptesDesktopClient:
 					if self.check_remote_certificate():
 						timeout=self.server_retest_timeout
 						master_n4d_id=self.get_server_n4d_id()
+						# n4d might have restarted but we dont need
+						# to reconfigure epoptes
+						'''
 						if master_n4d_id != self.master_n4d_id:
 							if self.configure_epoptes():
 								self.master_n4d_id=master_n4d_id
-								
+						'''
+						self.master_n4d_id=master_n4d_id		
 					else:
 						if self.configure_epoptes():
 							timeout=self.server_retest_timeout
