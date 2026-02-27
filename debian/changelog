@@ -1,3 +1,15 @@
+n4d-epoptes-desktop (0.4) jammy; urgency=medium
+
+  * Moved run_forever loop to a thread to try to better clean environment when
+    restarting user epoptes-client. Fresh new thread when loop detects changes
+    in server or root epoptes-client process.
+  * EpoptesDesktopClient n4d plugin restarts epoptes-client when it detects a
+    new master_n4d_id instead of fully reconfiguring epoptes certificate.
+  * n4d plugin tries to connect to server several times in order to avoid
+    reconfiguring epoptes certificate when not needed.
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Fri, 27 Feb 2026 14:03:43 +0100
+
 n4d-epoptes-desktop (0.3.5) jammy; urgency=medium
 
   * Added debug prints 
