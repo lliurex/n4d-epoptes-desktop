@@ -24,7 +24,7 @@ class EpoptesDesktopClient:
 		self.master_n4d_id=None
 			
 		self.default_timeout=15
-		self.server_retest_timeout=60*3
+		self.server_retest_timeout=60*2
 		
 		if not os.path.exists("/etc/epoptes"):
 			os.makedirs("/etc/epoptes/")
@@ -82,6 +82,12 @@ class EpoptesDesktopClient:
 	
 	def _main_loop(self):
 		
+		# If None there is no certificate, else, there is one
+		# If current md5 is equal to remote certificate
+		# we should avoid restarting epoptes-client 
+		
+		self.current_md5=self.get_certificate_md5()
+		
 		while True:
 			
 			timeout=self.default_timeout
@@ -102,7 +108,12 @@ class EpoptesDesktopClient:
 							if self.configure_epoptes():
 								self.master_n4d_id=master_n4d_id
 						'''
-						self.master_n4d_id=master_n4d_id		
+						# but it might be a good idea to restart it
+						if master_n4d_id != self.master_n4d_id:
+							self.restart_epoptes_client()
+							
+						self.master_n4d_id=master_n4d_id
+						
 					else:
 						if self.configure_epoptes():
 							timeout=self.server_retest_timeout
@@ -114,11 +125,17 @@ class EpoptesDesktopClient:
 	
 	def is_server_available(self):
 		
-		try:
-			socket.gethostbyname(self.server_name)
-			return True
-		except:
-			return False
+		timeout=2
+		tries=10
+		
+		for t in range(0,tries):
+			try:
+				socket.gethostbyname(self.server_name)
+				return True
+			except:
+				time.sleep(timeout)
+				
+		return False
 		
 	#def is_server_available
 	
@@ -190,6 +207,7 @@ class EpoptesDesktopClient:
 	
 	def restart_epoptes_client(self):
 		
+		print("Restarting epoptes...")
 		os.system("systemctl restart epoptes-client")
 		
 	#def restart_epoptes_client
