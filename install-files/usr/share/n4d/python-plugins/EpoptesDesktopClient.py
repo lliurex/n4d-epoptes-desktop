@@ -110,6 +110,7 @@ class EpoptesDesktopClient:
 						'''
 						# but it might be a good idea to restart it
 						if master_n4d_id != self.master_n4d_id:
+							timeout=self.default_timeout
 							self.restart_epoptes_client()
 							
 						self.master_n4d_id=master_n4d_id
