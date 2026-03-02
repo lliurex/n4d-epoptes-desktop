@@ -1,3 +1,9 @@
+n4d-epoptes-desktop (0.4.1) jammy; urgency=medium
+
+  * Trying to improve timeouts when n4d detects server has rebooted. 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Mon, 02 Mar 2026 19:00:50 +0100
+
 n4d-epoptes-desktop (0.4) jammy; urgency=medium
 
   * Moved run_forever loop to a thread to try to better clean environment when
