@@ -115,6 +115,9 @@ class EpoptesDesktopClient:
 							
 						self.master_n4d_id=master_n4d_id
 						
+						if not self.is_epoptes_alive():
+							self.restart_epoptes_client()
+						
 					else:
 						if self.configure_epoptes():
 							timeout=self.server_retest_timeout
@@ -212,6 +215,16 @@ class EpoptesDesktopClient:
 		os.system("systemctl restart epoptes-client")
 		
 	#def restart_epoptes_client
+	
+	def is_epoptes_alive(self):
+		
+		ret=os.system("systemctl is-alive epoptes-client")
+		if ret==0:
+			return True
+			
+		return False
+		
+	#def is_epoptes_alive
 	
 	
 if __name__=="__main__":
