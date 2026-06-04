@@ -1,3 +1,10 @@
+n4d-epoptes-desktop (0.4.2) jammy; urgency=medium
+
+  * main loop checks if epoptes-client is alive as well, if not, tries to
+    restart it. 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 04 Jun 2026 10:07:52 +0200
+
 n4d-epoptes-desktop (0.4.1) jammy; urgency=medium
 
   * Trying to improve timeouts when n4d detects server has rebooted. 
