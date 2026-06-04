@@ -218,11 +218,8 @@ class EpoptesDesktopClient:
 	
 	def is_epoptes_alive(self):
 		
-		ret=os.system("systemctl is-alive epoptes-client")
-		if ret==0:
-			return True
-			
-		return False
+		ret = subprocess.run(["systemctl", "is-active", "--quiet", "epoptes-client"])
+		return ret.returncode == 0
 		
 	#def is_epoptes_alive
 	
