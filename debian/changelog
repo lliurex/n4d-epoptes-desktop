@@ -1,4 +1,4 @@
-n4d-epoptes-desktop (0.4.3) jammy; urgency=medium
+n4d-epoptes-desktop (0.4.3) noble; urgency=medium
 
   * main loop checks if epoptes-client is alive as well, if not, tries to
     restart it. 
