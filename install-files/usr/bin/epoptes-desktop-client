@@ -60,10 +60,13 @@ class EpoptesClientManager:
 		
 		try:
 			for p in psutil.process_iter():
-				if "epoptes-client" in p.name() and "root" == p.username():
+				cmdline=p.cmdline()
+				if len(cmdline) == 0:
+					cmdline.append("")
+				if ("epoptes-client" in p.name() or cmdline[0]=="epoptes-client") and "root" == p.username():
 					return p.pid
-		except:
-			pass 
+		except Exception as e:
+			print(e)
 			
 		return None
 	
@@ -189,7 +192,7 @@ class EpoptesClientManager:
 
 				if restart_ok:
 					timeout=self.configured_timeout
-					
+
 				if self.epoptes_client_pid == None and root_epoptes_pid != None:
 					self.start_epoptes_client()
 			
