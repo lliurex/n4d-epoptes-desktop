@@ -32,8 +32,11 @@ class EpoptesDesktopClient:
 		# unless we come up with something better
 		# best idea is to remove certificate if it exists on initialization
 		
-		if os.path.exists(self.epoptes_certificate):
-			os.remove(self.epoptes_certificate)
+		#if os.path.exists(self.epoptes_certificate):
+		#	os.remove(self.epoptes_certificate)
+		
+		# on second thought , lets try not to rease it for now
+		# remote steps are more reliable right now
 		
 	#def init
 	
