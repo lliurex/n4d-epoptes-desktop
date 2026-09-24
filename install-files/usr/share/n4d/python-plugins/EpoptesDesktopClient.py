@@ -225,6 +225,7 @@ class EpoptesDesktopClient:
 		
 		print("Restarting epoptes...")
 		os.system("systemctl restart epoptes-client")
+		self.cert_ready_timestamp=int(time.time())
 		
 	#def restart_epoptes_client
 	
