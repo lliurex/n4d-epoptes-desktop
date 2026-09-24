@@ -1,4 +1,4 @@
-n4d-epoptes-desktop (0.4.5) noble; urgency=medium
+n4d-epoptes-desktop (0.4.6) noble; urgency=medium
 
   * Trying to fix check remote md5 function when booting up 
 
