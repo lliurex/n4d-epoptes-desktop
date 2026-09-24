@@ -1,3 +1,12 @@
+n4d-epoptes-desktop (0.4.8) jammy; urgency=medium
+
+  * remote certificate check is handled better
+  * updating cert timestamp when restarting epoptes-client service
+  * trying to avoid deleting epoptes certificate. Should fix PCs disappearing
+    once on startup
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 24 Sep 2026 10:00:49 +0200
+
 n4d-epoptes-desktop (0.4.3) jammy; urgency=medium
 
   * main loop checks if epoptes-client is alive as well, if not, tries to
