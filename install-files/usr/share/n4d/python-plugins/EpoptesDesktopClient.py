@@ -159,11 +159,23 @@ class EpoptesDesktopClient:
 	def check_remote_certificate(self):
 		
 		# stolen from epoptes-client
-		ret=os.system("openssl s_client -connect %s:789 </dev/null 2>/dev/null | sed '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/!d' > %s.tmp"%(self.server_name,self.epoptes_certificate))
+		
+		tmp_path="%s.tmp"%self.epoptes_certificate
+		
+		for x in range(0,10):
+			ret=os.system("openssl s_client -connect %s:789 </dev/null 2>/dev/null | sed '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/!d' > %s.tmp"%(self.server_name,self.epoptes_certificate))
+			if os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 10:
+				break
+			time.sleep(2)
+			
 		if ret==0:
-			cert=self.get_certificate_md5("%s.tmp"%self.epoptes_certificate)
-			if os.path.exists("%s.tmp"%self.epoptes_certificate):
-				os.remove("%s.tmp"%self.epoptes_certificate)
+			
+			if os.path.exists(tmp_path):
+				if os.path.getsize(tmp_path) > 10: 
+					cert=self.get_certificate_md5(tmp_path)
+				else:
+					cert = "CHECK_REMOTE_MD5_FAILED"
+				os.remove(tmp_path)
 			if cert == self.current_md5:
 				return True			
 				
@@ -213,6 +225,7 @@ class EpoptesDesktopClient:
 		
 		print("Restarting epoptes...")
 		os.system("systemctl restart epoptes-client")
+		self.cert_ready_timestamp=int(time.time())
 		
 	#def restart_epoptes_client
 	
