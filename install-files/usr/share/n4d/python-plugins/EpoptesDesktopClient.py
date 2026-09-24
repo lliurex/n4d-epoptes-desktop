@@ -169,9 +169,13 @@ class EpoptesDesktopClient:
 			time.sleep(2)
 			
 		if ret==0:
-			cert=self.get_certificate_md5("%s.tmp"%self.epoptes_certificate)
-			if os.path.exists("%s.tmp"%self.epoptes_certificate):
-				os.remove("%s.tmp"%self.epoptes_certificate)
+			
+			if os.path.exists(tmp_path):
+				if os.path.getsize(tmp_path) > 10: 
+					cert=self.get_certificate_md5(tmp_path)
+				else:
+					cert = "CHECK_REMOTE_MD5_FAILED"
+				os.remove(tmp_path)
 			if cert == self.current_md5:
 				return True			
 				
