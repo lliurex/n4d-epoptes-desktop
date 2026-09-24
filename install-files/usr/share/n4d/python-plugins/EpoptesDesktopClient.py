@@ -159,7 +159,15 @@ class EpoptesDesktopClient:
 	def check_remote_certificate(self):
 		
 		# stolen from epoptes-client
-		ret=os.system("openssl s_client -connect %s:789 </dev/null 2>/dev/null | sed '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/!d' > %s.tmp"%(self.server_name,self.epoptes_certificate))
+		
+		tmp_path="%s.tmp"%self.epoptes_certificate
+		
+		for x in range(0,10):
+			ret=os.system("openssl s_client -connect %s:789 </dev/null 2>/dev/null | sed '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/!d' > %s.tmp"%(self.server_name,self.epoptes_certificate))
+			if os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 10:
+				break
+			time.sleep(2)
+			
 		if ret==0:
 			cert=self.get_certificate_md5("%s.tmp"%self.epoptes_certificate)
 			if os.path.exists("%s.tmp"%self.epoptes_certificate):
