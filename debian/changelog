@@ -1,6 +1,7 @@
-n4d-epoptes-desktop (0.4.6) noble; urgency=medium
+n4d-epoptes-desktop (0.4.7) noble; urgency=medium
 
   * Trying to fix check remote md5 function when booting up 
+  * updating cert timestmap when restarting service
 
  -- Hector Garcia Huerta <hectorgh@gmail.com>  Thu, 24 Sep 2026 09:34:34 +0200
 
