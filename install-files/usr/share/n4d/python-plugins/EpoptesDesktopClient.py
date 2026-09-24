@@ -90,6 +90,8 @@ class EpoptesDesktopClient:
 		# we should avoid restarting epoptes-client 
 		
 		self.current_md5=self.get_certificate_md5()
+		if os.path.exists(self.epoptes_certificate):
+			self.cert_ready_timestamp=int(time.time())
 		
 		while True:
 			
